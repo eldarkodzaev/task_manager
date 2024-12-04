@@ -12,7 +12,7 @@ from managers import TaskManager
 from menu import menu, print_menu
 
 
-def main(manager: TaskManager):
+def main(manager: TaskManager) -> None:
     while True:
         print_menu()
         action = input(">>> ")

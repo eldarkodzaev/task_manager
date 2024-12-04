@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from datetime import date
 from enum import StrEnum
+from typing import Optional
         
 
 class Priority(StrEnum):
@@ -21,10 +22,10 @@ class Task:
     category: str
     due_date: date
     priority: Priority
-    id: int | None = None
-    status: Status | None = None
+    id: Optional[int] = None
+    status: Optional[Status] = None
     
-    def to_json(self):
+    def to_json(self) -> dict:
         return {
             "title": self.title,
             "description": self.description,

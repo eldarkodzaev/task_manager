@@ -1,6 +1,6 @@
 import colorama
 
-from extra_inputs import input_due_date, input_priority, input_task_id
+from extra_inputs import input_title, input_category, input_due_date, input_priority, input_task_id
 from managers import TaskManager
 from models import Task, Status
 from table import fill_table
@@ -45,14 +45,14 @@ def add_task(manager: TaskManager) -> None:
         manager (TaskManager): объект менеджера задач
     """
     print("Новая задача:")
-    title = input("Заголовок: ")
-    description = input("Описание: ")
-    category = input("Категория: ")
+    title = input_title()
+    description = input("Введите описание задачи: ")
+    category = input_category()
     due_date = input_due_date()
     priority = input_priority()
     
     new_task = Task(title, description, category, due_date, priority)
-    manager.add(new_task)
+    manager.add_task(new_task)
     print(colorama.Back.GREEN + "Задача добавлена")
 
 
@@ -63,14 +63,14 @@ def change_task(manager: TaskManager) -> None:
         manager (TaskManager): объект менеджера задач
     """
     task_id = input_task_id()
-    if not manager.exists(task_id):
+    if not manager.task_exists(task_id):
         print(colorama.Back.RED + f"Задачи с id '{task_id}' не существует")
         return
     
     print(colorama.Back.BLUE + "Введите новые данные (Enter, чтобы оставить поле без изменений):")
-    title = input("Заголовок: ")
+    title = input_title(blank=True)
     description = input("Описание: ")
-    category = input("Категория: ")
+    category = input_category(blank=True)
     due_date = input_due_date(blank=True)
     priority = input_priority(blank=True)
     
@@ -82,7 +82,7 @@ def change_task(manager: TaskManager) -> None:
         'priority': priority
     }
 
-    manager.change(task_id, **new_data)
+    manager.change_task(task_id, **new_data)
     print(colorama.Back.GREEN + "Задача изменена")
     
 
@@ -94,7 +94,7 @@ def mark_task_as_done(manager: TaskManager) -> None:
     """
     task_id = input_task_id()
     try:
-        manager.change(task_id, status=Status.done)
+        manager.change_task(task_id, status=Status.done)
         print(colorama.Back.GREEN + "Задача помечена как выполненная")
     except ValueError as e:
         print(colorama.Back.RED + str(e))
@@ -108,7 +108,7 @@ def delete_task_by_id(manager: TaskManager) -> None:
     """
     task_id = input_task_id()
     try:
-        manager.delete_by_id(task_id)
+        manager.delete_task_by_id(task_id)
         print(colorama.Back.GREEN + "Задача удалена.")
     except ValueError as e:
         print(colorama.Back.RED + str(e))
@@ -121,7 +121,7 @@ def delete_task_by_category(manager: TaskManager) -> None:
         manager (TaskManager): объект менеджера задач
     """
     category = input("Введите категорию задач, которые хотите удалить: ")
-    number_of_deleted_tasks = manager.delete_by_category(category)
+    number_of_deleted_tasks = manager.delete_task_by_category(category)
     print(colorama.Back.GREEN + f"Количество удаленных задач: {number_of_deleted_tasks}")
 
 
@@ -135,7 +135,7 @@ def search_task(manager: TaskManager) -> None:
     data = [
         [task['id'], task['status'], task['title'], task['description'],
         task['category'], task['due_date'], task['priority']]
-        for task in manager.search(query)
+        for task in manager.search_task(query)
     ]
     table = fill_table(data)
     print(table)

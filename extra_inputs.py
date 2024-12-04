@@ -5,7 +5,55 @@ import colorama
 from models import Priority
 
 
+def input_title(blank: bool = False) -> Optional[str]:
+    """Функция для ввода заголовка задачи
+
+    Параметры:
+        blank (bool, optional): если True, то допускается ввод пустой строки. По умолчанию False.
+
+    Возвращает:
+        Optional[str]: заголовок задачи (title) или None
+    """
+    while True:
+        title = input("Введите заголовок задачи: ")
+        if title == "":
+            if blank:
+                return None
+            else:
+                print(colorama.Back.RED + "Заголовок не может быть пустым")
+        else:
+            return title
+        
+
+def input_category(blank: bool = False) -> Optional[str]:
+    """Функция для ввода категории задачи
+
+    Параметры:
+        blank (bool, optional): если True, то допускается ввод пустой строки. По умолчанию False.
+
+    Возвращает:
+        Optional[str]: категорию задачи (category) или None
+    """
+    while True:
+        category = input("Введите категорию задачи: ")
+        if category == "":
+            if blank:
+                return None
+            else:
+                print(colorama.Back.RED + "Категория не может быть пустой")
+        else:
+            return category
+        
+
 def input_due_date(blank: bool = False) -> Optional[datetime.date]:
+    """Функция для ввода срока выполнения задачи
+
+    Параметры:
+        blank (bool, optional): если True, то допускается ввод пустой строки. По умолчанию False.
+
+    Возвращает:
+        Optional[datetime.date]: объект даты (due_date) или None
+    """
     while True:
         due_date = input("Введите срок выполнения в формате ГГГГ-ММ-ДД: ")
         try:
@@ -13,16 +61,24 @@ def input_due_date(blank: bool = False) -> Optional[datetime.date]:
                 return None
             date = datetime.strptime(due_date, "%Y-%m-%d").date()
         except ValueError:
-            print(colorama.Fore.RED + "Неверный формат даты")
+            print(colorama.Back.RED + "Неверный формат даты")
         else:
             if date < datetime.today().date():
-                print(colorama.Fore.RED + "Срок выполнения задачи не может быть в прошлом")
+                print(colorama.Back.RED + "Срок выполнения задачи не может быть в прошлом")
             else:
                 return date
             
     
     
-def input_priority(blank: bool = False) -> str | None:
+def input_priority(blank: bool = False) -> Optional[str]:
+    """Функция для ввода приоритета задачи
+
+    Параметры:
+        blank (bool, optional): если True, то допускается ввод пустой строки. По умолчанию False.
+
+    Возвращает:
+        Optional[str]: строка: "1", "2" или "3"
+    """
     priorities = {
         "1": Priority.high,
         "2": Priority.medium,
@@ -39,11 +95,16 @@ def input_priority(blank: bool = False) -> str | None:
         if priority in priorities.keys():
             return priorities[priority]
         else:
-            print(colorama.Fore.RED + "Неверный ввод")
+            print(colorama.Back.RED + "Неверный ввод")
             
 def input_task_id() -> int:
+    """Функция для ввода id задачи
+
+    Возвращает:
+        int: id задачи
+    """
     while True:
         try:
             return int(input("Введите id задачи: "))
         except (ValueError, TypeError):
-            print(colorama.Fore.RED + "ID должно быть целым числом")
+            print(colorama.Back.RED + "ID должно быть целым числом")

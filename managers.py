@@ -44,7 +44,7 @@ class TaskManager:
         return max(ids, default=0) + 1
 
     def get_task_from_id(self, task_id: int) -> Task:
-        """Возвращает объект Task по ее id
+        """Возвращает объект Task по id
 
         Args:
             task_id (int): id задачи
@@ -68,7 +68,7 @@ class TaskManager:
                 )
         raise ValueError(f"Задачи с id '{task_id}' не существует")
 
-    def exists(self, task_id: int) -> bool:
+    def task_exists(self, task_id: int) -> bool:
         """Определяет, существует ли задача с указанным id
 
         Args:
@@ -79,7 +79,7 @@ class TaskManager:
         """
         return any([task['id'] == task_id for task in self.tasks])
 
-    def add(self, task: Task) -> None:
+    def add_task(self, task: Task) -> None:
         """Добавляет задачу в базу данных
 
         Args:
@@ -94,7 +94,7 @@ class TaskManager:
         tasks.append(task_json | extra)
         self.__rewrite_tasks(new_data=tasks)
 
-    def change(self, task_id: int, **kwargs) -> None:
+    def change_task(self, task_id: int, **kwargs) -> None:
         """Редактирует задачу
 
         Args:
@@ -102,7 +102,7 @@ class TaskManager:
         """
         
         task: Task = self.get_task_from_id(task_id)
-        
+
         if (title := kwargs.get('title')):
             task.title = title
             
@@ -130,7 +130,7 @@ class TaskManager:
 
         self.__rewrite_tasks(new_data=tasks)
 
-    def delete_by_id(self, task_id: int) -> None:
+    def delete_task_by_id(self, task_id: int) -> None:
         """Удаляет задачу по ее id
 
         Args:
@@ -139,16 +139,13 @@ class TaskManager:
         Raises:
             ValueError: если task_id не существует
         """
-        if not self.exists(task_id):
+        if not self.task_exists(task_id):
             raise ValueError(f"Задачи с id '{task_id}' не существует")
 
-        tasks = []
-        for task in self.tasks:
-            if task['id'] != task_id:
-                tasks.append(task)
+        tasks = [task for task in self.tasks if task['id'] != task_id]
         self.__rewrite_tasks(new_data=tasks)
 
-    def delete_by_category(self, category: str) -> int:
+    def delete_task_by_category(self, category: str) -> int:
         """Удаляет задачи заданной категории
 
         Args:
@@ -167,7 +164,7 @@ class TaskManager:
         self.__rewrite_tasks(new_data=tasks)
         return number_of_deleted_tasks
 
-    def search(self, query: str) -> list[dict]:
+    def search_task(self, query: str) -> list[dict]:
         """Поиск по ключевым словам, категории или статусу выполнения
 
         Returns:
