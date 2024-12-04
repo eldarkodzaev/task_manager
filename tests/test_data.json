@@ -1,0 +1,29 @@
+[
+    {
+      "id": 1,
+      "status": "выполнена",
+      "title": "Task 1",
+      "description": "Description for Task 1",
+      "category": "Work",
+      "due_date": "2023-11-01",
+      "priority": "высокий"
+    },
+    {
+      "id": 2,
+      "status": "не выполнена",
+      "title": "Task 2",
+      "description": "Description for Task 2",
+      "category": "Personal",
+      "due_date": "2023-11-05",
+      "priority": "средний"
+    },
+    {
+      "id": 3,
+      "status": "выполнена",
+      "title": "Task 3",
+      "description": "Description for Task 3",
+      "category": "Work",
+      "due_date": "2023-11-08",
+      "priority": "низкий"
+    }
+]

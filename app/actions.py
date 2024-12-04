@@ -1,6 +1,9 @@
 import colorama
 
-from extra_inputs import input_title, input_category, input_due_date, input_priority, input_task_id
+from extra_inputs import (
+    input_title, input_category, input_due_date, 
+    input_priority, input_task_id
+)
 from managers import TaskManager
 from models import Task, Status
 from table import fill_table

@@ -1,18 +1,19 @@
-import pytest
 import json
+import pytest
 from datetime import date
-from managers import TaskManager
-from models import Task, Priority, Status
+
+from app.managers import TaskManager
+from app.models import Task, Priority, Status
 
 
 @pytest.fixture
 def reset_test_data():
     """Фикстура восстанавливает базу данных перед запуском теста"""
     
-    with open("test_data.json", "r", encoding="utf-8") as test_data:
+    with open("tests/test_data.json", "r", encoding="utf-8") as test_data:
         data = json.load(test_data)
         
-    with open("test_tasks.json", "w", encoding="utf-8") as test_tasks:
+    with open("tests/test_tasks.json", "w", encoding="utf-8") as test_tasks:
         json.dump(data, test_tasks, ensure_ascii=False, indent=4)
 
 
@@ -22,17 +23,17 @@ class TestTaskManager:
     def test_get_new_id(self):
         """Проверяет функцию генерации нового id"""
         
-        manager = TaskManager(file="test_tasks.json")
+        manager = TaskManager(file="tests/test_tasks.json")
         assert 4 == manager.get_new_id()
         
-        manager = TaskManager(file="test_tasks_EMPTY.json")
+        manager = TaskManager(file="tests/test_tasks_EMPTY.json")
         assert 1 == manager.get_new_id()
         
 
     def test_add(self):
         """Проверяет добавление новой задачи"""
         
-        manager = TaskManager(file="test_tasks.json")
+        manager = TaskManager(file="tests/test_tasks.json")
         task = Task(
             title="new title",
             description="new description",
@@ -44,7 +45,7 @@ class TestTaskManager:
         )
         manager.add_task(task)
         
-        with open("test_data.json", "r", encoding="utf-8") as json_file:
+        with open("tests/test_data.json", "r", encoding="utf-8") as json_file:
             expected_json = json.load(json_file)
         
         expected_json = [
@@ -54,7 +55,7 @@ class TestTaskManager:
             {"id": 4, "status": "не выполнена", "title": "new title", "description": "new description", "category": "new category", "due_date": "2124-01-01", "priority": "высокий"}
         ]
         
-        with open("test_tasks.json", "r", encoding="utf-8") as json_file:
+        with open("tests/test_tasks.json", "r", encoding="utf-8") as json_file:
             tasks = json.load(json_file)
         
         assert expected_json == tasks
@@ -64,7 +65,7 @@ class TestTaskManager:
         """Случай, когда пользователь пытается редактировать задачу,
         которой нет в базе данных"""
         
-        manager = TaskManager(file="test_tasks.json")
+        manager = TaskManager(file="tests/test_tasks.json")
         with pytest.raises(ValueError):
             manager.change_task(task_id=123)  # нет задачи с id 123
             
@@ -72,7 +73,7 @@ class TestTaskManager:
     def test_change_task_fully(self):
         """Случай, когда редактирутся все поля задачи"""
         
-        manager = TaskManager(file="test_tasks.json")
+        manager = TaskManager(file="tests/test_tasks.json")
         manager.change_task(
             task_id=1, 
             title="New title", 
@@ -87,7 +88,7 @@ class TestTaskManager:
             {"id": 2, "status": "не выполнена", "title": "Task 2", "description": "Description for Task 2", "category": "Personal", "due_date": "2023-11-05", "priority": "средний"},
             {"id": 3, "status": "выполнена", "title": "Task 3", "description": "Description for Task 3", "category": "Work", "due_date": "2023-11-08", "priority": "низкий"}
         ]
-        with open("test_tasks.json", "r", encoding="utf-8") as json_file:
+        with open("tests/test_tasks.json", "r", encoding="utf-8") as json_file:
             tasks = json.load(json_file)
             
         assert expected_json == tasks
@@ -96,7 +97,7 @@ class TestTaskManager:
     def test_change_task_partial(self):
         """Случай, когда редактируются не все поля задачи"""
         
-        manager = TaskManager(file="test_tasks.json")
+        manager = TaskManager(file="tests/test_tasks.json")
         manager.change_task(
             task_id=1,
             title="New title",
@@ -109,7 +110,7 @@ class TestTaskManager:
             {"id": 2, "status": "не выполнена", "title": "Task 2", "description": "Description for Task 2", "category": "Personal", "due_date": "2023-11-05", "priority": "средний"},
             {"id": 3, "status": "выполнена", "title": "Task 3", "description": "Description for Task 3", "category": "Work", "due_date": "2023-11-08", "priority": "низкий"}
         ]
-        with open("test_tasks.json", "r", encoding="utf-8") as json_file:
+        with open("tests/test_tasks.json", "r", encoding="utf-8") as json_file:
             tasks = json.load(json_file)
             
         assert expected_json == tasks
@@ -117,7 +118,7 @@ class TestTaskManager:
         
     def test_mark_as_done(self):
         """Изменение статуса задачи на 'выполнена'"""
-        manager = TaskManager(file="test_tasks.json")
+        manager = TaskManager(file="tests/test_tasks.json")
         manager.change_task(
             task_id=2,
             status=Status.done
@@ -128,7 +129,7 @@ class TestTaskManager:
             {"id": 2, "status": "выполнена", "title": "Task 2", "description": "Description for Task 2", "category": "Personal", "due_date": "2023-11-05", "priority": "средний"},
             {"id": 3, "status": "выполнена", "title": "Task 3", "description": "Description for Task 3", "category": "Work", "due_date": "2023-11-08", "priority": "низкий"}
         ]
-        with open("test_tasks.json", "r", encoding="utf-8") as json_file:
+        with open("tests/test_tasks.json", "r", encoding="utf-8") as json_file:
             tasks = json.load(json_file)
             
         assert expected_json == tasks
@@ -136,13 +137,13 @@ class TestTaskManager:
 
     def test_delete_by_id(self):
         """Удаление задачи по id"""
-        manager = TaskManager(file="test_tasks.json")
+        manager = TaskManager(file="tests/test_tasks.json")
         manager.delete_task_by_id(task_id=1)
         expected_json = [
             {"id": 2, "status": "не выполнена", "title": "Task 2", "description": "Description for Task 2", "category": "Personal", "due_date": "2023-11-05", "priority": "средний"},
             {"id": 3, "status": "выполнена", "title": "Task 3", "description": "Description for Task 3", "category": "Work", "due_date": "2023-11-08", "priority": "низкий"}
         ]
-        with open("test_tasks.json", "r", encoding="utf-8") as json_file:
+        with open("tests/test_tasks.json", "r", encoding="utf-8") as json_file:
             tasks = json.load(json_file)
             
         assert expected_json == tasks
@@ -150,12 +151,12 @@ class TestTaskManager:
 
     def test_delete_by_category(self):
         """Удаление задач по категории"""
-        manager = TaskManager(file="test_tasks.json")
+        manager = TaskManager(file="tests/test_tasks.json")
         number_of_deleted_tasks = manager.delete_task_by_category(category="Work")
         expected_json = [
             {"id": 2, "status": "не выполнена", "title": "Task 2", "description": "Description for Task 2", "category": "Personal", "due_date": "2023-11-05", "priority": "средний"}
         ]
-        with open("test_tasks.json", "r", encoding="utf-8") as json_file:
+        with open("tests/test_tasks.json", "r", encoding="utf-8") as json_file:
             tasks = json.load(json_file)
             
         assert expected_json == tasks
