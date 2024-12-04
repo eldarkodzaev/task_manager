@@ -1,3 +1,6 @@
+# Модуль, описывающий пользовательское меню
+
+
 from actions import (
     show_tasks, show_tasks_for_category,
     add_task, change_task, mark_task_as_done,
@@ -6,6 +9,8 @@ from actions import (
 
 
 def print_menu():
+    """Выводит меню в консоль"""
+    
     print("\nВыберите действие:")
     print("1) Посмотреть все задачи")
     print("2) Посмотреть задачи определенной категории")

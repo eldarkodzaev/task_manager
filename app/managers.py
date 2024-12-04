@@ -1,3 +1,6 @@
+# Модуль, описывающий менеджер задач TaskManager
+
+
 import os
 import json
 from datetime import datetime
@@ -7,6 +10,8 @@ from models import Task, Status
 
 
 class TaskManager:
+    """Менеджер задач.
+    Этот класс непосредственно работает с базой данных"""
 
     def __init__(self, file: str) -> None:
         """

@@ -1,3 +1,7 @@
+# Модуль, описывающий функции для ввода данных о задаче
+# со всеми возможными проверками
+
+
 from typing import Optional
 from datetime import datetime
 
@@ -8,10 +12,10 @@ from models import Priority
 def input_title(blank: bool = False) -> Optional[str]:
     """Функция для ввода заголовка задачи
 
-    Параметры:
+    Args:
         blank (bool, optional): если True, то допускается ввод пустой строки. По умолчанию False.
 
-    Возвращает:
+    Returns:
         Optional[str]: заголовок задачи (title) или None
     """
     while True:
@@ -28,10 +32,10 @@ def input_title(blank: bool = False) -> Optional[str]:
 def input_category(blank: bool = False) -> Optional[str]:
     """Функция для ввода категории задачи
 
-    Параметры:
+    Args:
         blank (bool, optional): если True, то допускается ввод пустой строки. По умолчанию False.
 
-    Возвращает:
+    Returns:
         Optional[str]: категорию задачи (category) или None
     """
     while True:
@@ -48,10 +52,10 @@ def input_category(blank: bool = False) -> Optional[str]:
 def input_due_date(blank: bool = False) -> Optional[datetime.date]:
     """Функция для ввода срока выполнения задачи
 
-    Параметры:
+    Args:
         blank (bool, optional): если True, то допускается ввод пустой строки. По умолчанию False.
 
-    Возвращает:
+    Returns:
         Optional[datetime.date]: объект даты (due_date) или None
     """
     while True:
@@ -73,10 +77,10 @@ def input_due_date(blank: bool = False) -> Optional[datetime.date]:
 def input_priority(blank: bool = False) -> Optional[str]:
     """Функция для ввода приоритета задачи
 
-    Параметры:
+    Args:
         blank (bool, optional): если True, то допускается ввод пустой строки. По умолчанию False.
 
-    Возвращает:
+    Returns:
         Optional[str]: строка: "1", "2" или "3"
     """
     priorities = {
@@ -100,7 +104,7 @@ def input_priority(blank: bool = False) -> Optional[str]:
 def input_task_id() -> int:
     """Функция для ввода id задачи
 
-    Возвращает:
+    Returns:
         int: id задачи
     """
     while True:
